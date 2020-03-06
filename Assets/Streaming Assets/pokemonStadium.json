@@ -1,0 +1,397 @@
+{
+    "00040D30CA564981": {
+        "objectBrand":"amiibo",
+        "objectType":"figurine",
+        "objectSku":"Mewtwo Amiibo",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 105,
+                "MaxHP": 105,
+                "Speed": 50,
+                "multipleAttackDamage": 40,
+                "multiDefend": -10,
+                "selfDefendDamage": -40,
+                "singleAttackDamage": 60,
+                "singleDefendDamage": -40,
+                "myElement": "Psychic",
+                "pokeName": "Mewtwo",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Psywave",
+                        "type": "multiAttack",
+                        "damageValue": 40
+                    },
+                    {
+                        "name": "Dark Ball",
+                        "type": "singleAttack",
+                        "damageValue": 60
+                    },
+                    {
+                        "name": "Reflect",
+                        "type": "multiDefend",
+                        "damageValue": -10
+                    },
+                    {
+                        "name": "Recover",
+                        "type": "singleDefend",
+                        "damageValue": -40
+                    }
+                ]
+            }
+        }
+    },
+
+    "000438A57A983C81": {
+        "objectBrand":"amiibo",
+        "objectType":"figurine",
+        "objectSku":"Pikachu Amiibo",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 100,
+                "MaxHP": 100,
+                "Speed": 80,
+                "multipleAttackDamage": 25,
+                "multiDefend": -10,
+                "selfDefendDamage": -15,
+                "singleAttackDamage": 40,
+                "singleDefendDamage": -15,
+                "myElement": "Lightning",
+                "pokeName": "Pikachu",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Thunderbolt",
+                        "type": "multiAttack",
+                        "damageValue": 25
+                    },
+                    {
+                        "name": "Jolt",
+                        "type": "singleAttack",
+                        "damageValue": 40
+                    },
+                    {
+                        "name": "Thunder Wave",
+                        "type": "multiDefend",
+                        "damageValue": -10
+                    },
+                    {
+                        "name": "Agility",
+                        "type": "singleDefend",
+                        "damageValue": -15
+                    }
+                ]
+            }
+        }
+    },
+
+    "00048C2EBAE84980": {
+        "objectBrand":"amiibo",
+        "objectType":"figurine",
+        "objectSku":"Jigglypuff Amiibo",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 115,
+                "MaxHP": 115,
+                "Speed": 75,
+                "multipleAttackDamage": 25,
+                "multipleDefendDamage": -10,
+                "selfDefendDamage": -15,
+                "singleAttackDamage": 40,
+                "singleDefendDamage": -15,
+                "myElement": "Dark",
+                "pokeName": "Stitch",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Lilo",
+                "attacks": [
+                    {
+                        "name": "Blaster Barrage",
+                        "type": "multiAttack",
+                        "damageValue": 25
+                    },
+                    {
+                        "name": "Demolition Ball",
+                        "type": "singleAttack",
+                        "damageValue": 40
+                    },
+                    {
+                        "name": "Supercomputer Scan",
+                        "type": "multiDefend",
+                        "damageValue": -15
+                    },
+                    {
+                        "name": "Alien Serum",
+                        "type": "singleDefend",
+                        "damageValue": -15
+                    }
+                ]
+            }
+        }
+    },
+
+    "00046665A2905B80": {
+        "objectBrand":"Pokemon TCG",
+        "objectType":"card",
+        "objectSku":"Raichu TCG",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 100,
+                "MaxHP": 100,
+                "Speed": 80,
+                "multipleAttackDamage": 25,
+                "multiDefend": -10,
+                "selfDefendDamage": -15,
+                "singleAttackDamage": 40,
+                "singleDefendDamage": -15,
+                "myElement": "Lightning",
+                "pokeName": "Pikachu",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Thunderbolt",
+                        "type": "multiAttack",
+                        "damageValue": 25
+                    },
+                    {
+                        "name": "Jolt",
+                        "type": "singleAttack",
+                        "damageValue": 40
+                    },
+                    {
+                        "name": "Thunder Wave",
+                        "type": "multiDefend",
+                        "damageValue": -10
+                    },
+                    {
+                        "name": "Agility",
+                        "type": "singleDefend",
+                        "damageValue": -15
+                    }
+                ]
+            }
+        }
+    },
+
+    "0004BD65A2905B80": {
+        "objectBrand":"Pokemon TCG",
+        "objectType":"card",
+        "objectSku":"Lickitung TCG",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 105,
+                "MaxHP": 105,
+                "Speed": 50,
+                "multipleAttackDamage": 40,
+                "multiDefend": -10,
+                "selfDefendDamage": -40,
+                "singleAttackDamage": 60,
+                "singleDefendDamage": -40,
+                "myElement": "Psychic",
+                "pokeName": "Mewtwo",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Psywave",
+                        "type": "multiAttack",
+                        "damageValue": 40
+                    },
+                    {
+                        "name": "Dark Ball",
+                        "type": "singleAttack",
+                        "damageValue": 60
+                    },
+                    {
+                        "name": "Reflect",
+                        "type": "multiDefend",
+                        "damageValue": -10
+                    },
+                    {
+                        "name": "Recover",
+                        "type": "singleDefend",
+                        "damageValue": -40
+                    }
+                ]
+            }
+        }
+    },
+
+    "0004A061A2905B80": {
+        "objectBrand":"Pokemon TCG",
+        "objectType":"card",
+        "objectSku":"Eevee TCG",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 115,
+                "MaxHP": 115,
+                "Speed": 75,
+                "multipleAttackDamage": 25,
+                "multipleDefendDamage": -10,
+                "selfDefendDamage": -15,
+                "singleAttackDamage": 40,
+                "singleDefendDamage": -15,
+                "myElement": "Dark",
+                "pokeName": "Stitch",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Lilo",
+                "attacks": [
+                    {
+                        "name": "Blaster Barrage",
+                        "type": "multiAttack",
+                        "damageValue": 25
+                    },
+                    {
+                        "name": "Demolition Ball",
+                        "type": "singleAttack",
+                        "damageValue": 40
+                    },
+                    {
+                        "name": "Supercomputer Scan",
+                        "type": "multiDefend",
+                        "damageValue": -15
+                    },
+                    {
+                        "name": "Alien Serum",
+                        "type": "singleDefend",
+                        "damageValue": -15
+                    }
+                ]
+            }
+        }
+    },
+
+    "00043165A2905B80": {
+        "objectBrand":"Pokemon TCG",
+        "objectType":"card",
+        "objectSku":"Charizard TCG",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 150,
+                "MaxHP": 150,
+                "Speed": 65,
+                "multipleAttackDamage": 30,
+                "multiDefend": -15,
+                "selfDefendDamage": -25,
+                "singleAttackDamage": 45,
+                "singleDefendDamage": -25,
+                "myElement": "Fire",
+                "pokeName": "Charizard",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Flamethrower",
+                        "type": "multiAttack",
+                        "damageValue": 30
+                    },
+                    {
+                        "name": "Inferno",
+                        "type": "singleAttack",
+                        "damageValue": 30
+                    },
+                    {
+                        "name": "Burning Rage",
+                        "type": "multiDefend",
+                        "damageValue": -15
+                    },
+                    {
+                        "name": "Whirlwind",
+                        "type": "singleDefend",
+                        "damageValue": -25
+                    }
+                ]
+            }
+        }
+    },
+
+    "0004DB6DF2714080": {
+        "objectBrand":"amiibo",
+        "objectType":"figurine",
+        "objectSku":"Charizard Amiibo",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 150,
+                "MaxHP": 150,
+                "Speed": 65,
+                "multipleAttackDamage": 30,
+                "multiDefend": -15,
+                "selfDefendDamage": -25,
+                "singleAttackDamage": 45,
+                "singleDefendDamage": -25,
+                "myElement": "Fire",
+                "pokeName": "Charizard",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Flamethrower",
+                        "type": "multiAttack",
+                        "damageValue": 30
+                    },
+                    {
+                        "name": "Inferno",
+                        "type": "singleAttack",
+                        "damageValue": 30
+                    },
+                    {
+                        "name": "Burning Rage",
+                        "type": "multiDefend",
+                        "damageValue": -15
+                    },
+                    {
+                        "name": "Whirlwind",
+                        "type": "singleDefend",
+                        "damageValue": -25
+                    }
+                ]
+            }
+        }
+    },
+    
+    "04DB6DF27104080": {
+        "objectBrand":"amiibo",
+        "objectType":"figurine",
+        "objectSku":"Charizard Amiibo",
+        "virtualRecords":{
+            "toyboxStadium": {
+                "CurrentHP": 150,
+                "MaxHP": 150,
+                "Speed": 65,
+                "multipleAttackDamage": 30,
+                "multiDefend": -15,
+                "selfDefendDamage": -25,
+                "singleAttackDamage": 45,
+                "singleDefendDamage": -25,
+                "myElement": "Fire",
+                "pokeName": "Charizard",
+                "pokeRFTag": "6A 6S 43 RF R1 43",
+                "pokeTrainer": "Ashe Catch'em",
+                "attacks": [
+                    {
+                        "name": "Flamethrower",
+                        "type": "multiAttack",
+                        "damageValue": 30
+                    },
+                    {
+                        "name": "Inferno",
+                        "type": "singleAttack",
+                        "damageValue": 30
+                    },
+                    {
+                        "name": "Burning Rage",
+                        "type": "multiDefend",
+                        "damageValue": -15
+                    },
+                    {
+                        "name": "Whirlwind",
+                        "type": "singleDefend",
+                        "damageValue": -25
+                    }
+                ]
+            }
+        }
+    }
+}
