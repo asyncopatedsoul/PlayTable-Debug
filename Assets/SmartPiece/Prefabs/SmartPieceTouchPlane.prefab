@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 5690108831366599434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.06, y: 1, z: 1.09}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -138,6 +138,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ptsrv: {fileID: 5690108831366599427}
-  deviceOffline: 1
+  smartTouchCanvasName: SmartTouchCanvas
   touchMarkerPrefab: {fileID: 7199945459109960946, guid: 221b00e0ca116484ba8934bdb48a952c,
     type: 3}
+  touchMarker2DPrefab: {fileID: 0}
+  smartTouchHitLayers:
+    serializedVersion: 2
+    m_Bits: 0

@@ -9,6 +9,16 @@ namespace PlayTable {
     {
         public static SmartPieceDatabase instance;
         // public Dictionary<String, Dictionary> library;
+        public bool deviceOffline = true;
+
+        public void SetDeviceOffline() {
+            deviceOffline = true;
+        }
+
+        public void SetDeviceOnline() {
+            deviceOffline = false;
+        }
+
 
         // Start is called before the first frame update
         void Start()

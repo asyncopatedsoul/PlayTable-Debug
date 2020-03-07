@@ -22,10 +22,10 @@ namespace PlayTable {
 
         public PTService ptsrv;
 
-        public bool deviceOffline = false; 
         public String smartTouchCanvasName = "SmartTouchCanvas";
         public GameObject touchMarkerPrefab;
         public GameObject touchMarker2DPrefab;
+        public LayerMask smartTouchHitLayers;
 
         // TouchMap
         int xOffsetL = 64;
@@ -71,22 +71,35 @@ namespace PlayTable {
         public class SpMarker
         {
             public int touchId;
+            public string label;
             public GameObject go;
+            public GameObject collider2D;
+            public GameObject collider3D;
 
-            public SpMarker (int newTouchId, GameObject newGo) {
-            touchId = newTouchId;
-            go = newGo;
+            // public SpMarker (int newTouchId, GameObject newGo) {
+            //     touchId = newTouchId;
+            //     go = newGo;
+            // }
+
+            public SpMarker (int newTouchId, GameObject _collider2D, GameObject _collider3D) {
+                touchId = newTouchId;
+                collider2D = _collider2D;
+                collider3D = _collider3D;
+            }
+
+            public void SetSmartPieceData(string RFID, string _label)
+            {
+                label = _label;
+
+                collider2D.GetComponent<TouchMarker>().smartPieceID = RFID;
+                collider3D.GetComponent<TouchMarker>().smartPieceID = RFID;
+            }
+
+            public void SetDebugInfo(string labelText, string UIDText, string coordinateText, string touchIDText)
+            {
+                collider2D.GetComponent<TouchMarkerInfo>().UpdateInfoText(labelText, UIDText, coordinateText, touchIDText);
             }
         }
-
-        public void SetDeviceOffline() {
-            deviceOffline = true;
-        }
-
-        public void SetDeviceOnline() {
-            deviceOffline = false;
-        }
-
 
         void Start()
         {
@@ -152,160 +165,168 @@ namespace PlayTable {
                     yCoordinate = canvasHeight - (int)t.position.y;
                     Vector2 touchPos = new Vector2(t.position.x, t.position.y);
 
-                     // if offline, just create touch marker with RFID
-                    if (deviceOffline) {
-                        spMarkers.Add(new SpMarker(t.fingerId, CreateTouchMarker(touchPos, "OFFLINE")));
-
-                    // if online, can fetch SmartPiece data from server and enrich touch data
-                    } else {
-
-                        string uid = IssueScan(xCoordinate, yCoordinate);
+                    string uid = IssueScan(xCoordinate, yCoordinate);
+                    
+                    if (uid != "null") {
+                        Debug.Log("TOUCHID:" + n + ", UID:" + uid);     
                         
-                        if (uid != "null") {
-                            Debug.Log("Sp exists: " + n);     
-                            
-                                // yield return StartCoroutine(GetCharacterNameFromUID(uid));
-                                // string characterName = jsonName;
-                                // Debug.Log("Sp charactername: " + characterName);
-                                string characterName = String.Format("UID {0} at {1},{2} : {3}", uid, xCoordinate, yCoordinate, t.fingerId);
-                                
-                                spMarkers.Add(new SpMarker(t.fingerId, CreateSpMarker(touchPos, characterName, uid)));
-                            
-                        } else {
-                                spMarkers.Add(new SpMarker(t.fingerId, CreateTouchMarker(touchPos, String.Format("NO UID at {0},{1} : {2}",xCoordinate, yCoordinate, t.fingerId))));
-                        }
+                        string label = String.Format("UID {0} at {1},{2} : {3}", uid, xCoordinate, yCoordinate, t.fingerId);
+                        CreateTouchMarker2D(touchPos, t.fingerId, label, uid);
+                    } else {
+                        CreateTouchMarker2D(touchPos, t.fingerId, "NOLABEL", "NOUID");
                     }
+                    
                 } else if (t.phase == TouchPhase.Ended) {
                     Debug.Log("touch ended: " + n);
-                    SpMarker thisSp = spMarkers.Find(SpMarker => SpMarker.touchId == t.fingerId);
-                    Destroy(thisSp.go);
-                    spMarkers.RemoveAt(spMarkers.IndexOf(thisSp));
+                    ClearTouchMarker(t.fingerId);
+
                 } else if (t.phase == TouchPhase.Moved) {
                     Debug.Log("touch moving: " + n);
-                    SpMarker thisSp = spMarkers.Find(SpMarker => SpMarker.touchId == t.fingerId);
-                    Vector2 newPos = new Vector2(t.position.x, t.position.y);
-                    thisSp.go.transform.position = newPos;
+                    UpdateTouchMarker(t.fingerId,t.position);
                 }
             }
 
             yield return null;
         }
+        
 
         public void ClearAllTouchMarkers() 
         {
             for (int i=0; i<spMarkers.Count; i++) {
-                Destroy(spMarkers[i].go);
+                // Destroy(spMarkers[i].go);
+                Destroy(spMarkers[i].collider2D);
+                Destroy(spMarkers[i].collider3D);
             } 
             spMarkers.Clear();
+        }
+
+        public void ClearTouchMarker(int touchId)
+        {
+            SpMarker marker = spMarkers.Find(SpMarker => SpMarker.touchId == touchId);
+            Destroy(marker.collider2D);
+            Destroy(marker.collider3D);
+            spMarkers.RemoveAt(spMarkers.IndexOf(marker));
+        }
+
+        public void UpdateTouchMarker(int touchId, Vector3 updatedPosition)
+        {
+            // Debug.Log("touch marker moving: " + touchId);
+            SpMarker thisSp = spMarkers.Find(SpMarker => SpMarker.touchId == touchId);
+            
+            Vector2 newPos = new Vector2(updatedPosition.x, updatedPosition.y);
+            thisSp.collider2D.transform.position = newPos;
+
+            Ray castPoint = Camera.main.ScreenPointToRay(updatedPosition);
+            RaycastHit hit;
+            if (Physics.Raycast(castPoint, out hit, Mathf.Infinity, smartTouchHitLayers))
+            {
+                thisSp.collider3D.transform.position = hit.point;
+            }
         }
 
         public SpMarker CreateTouchMarker2D(Vector3 spawnPosisiton, int touchID, string label, string uid)
         {
             GameObject touchMarker2D = Instantiate(touchMarker2DPrefab, spawnPosisiton, Quaternion.identity);
-            // touchMarker.GetComponentInChildren<TouchMarker>().smartPieceID = uid;
-
             touchMarker2D.transform.parent = goCanvas.transform;
             touchMarker2D.transform.position = spawnPosisiton;
 
-            SpMarker marker = new SpMarker(touchID, touchMarker2D);
+            GameObject touchMarker3D = Instantiate(touchMarkerPrefab, spawnPosisiton, Quaternion.identity);
+
+            SpMarker marker = new SpMarker(touchID, touchMarker2D, touchMarker3D);
+            marker.SetSmartPieceData(uid, label);
+            marker.SetDebugInfo(label, uid, 
+                String.Format("{0},{1}",spawnPosisiton.x.ToString(),spawnPosisiton.y.ToString()), 
+                touchID.ToString());
             spMarkers.Add(marker);
 
             return marker;
         }
 
-        public GameObject CreateTouchMarker(Vector3 pos, string uid) 
-        {
-            // GameObject touchMarker = Instantiate(touchMarkerPrefab, pos, Quaternion.identity);
-            // touchMarker.GetComponentInChildren<TouchMarker>().smartPieceID = uid;
+        // public GameObject CreateTouchMarker(Vector3 pos, string uid) 
+        // {
+        //     string labelUid = uid;
+        //     int uidY = (int)pos.y - 130;
+        //     Vector3 uidPos = new Vector3(pos.x, uidY, pos.z);
+        //     string labelName = uid;
+        //     int nameY = (int)pos.y - 160;
+        //     Vector3 namePos = new Vector3(pos.x, nameY, pos.z);
 
-            // touchMarker.transform.parent = goCanvas.transform;
-            // touchMarker.transform.position = pos;
+        //     GameObject go = new GameObject(uid);
+        //     go.transform.parent = goCanvas.transform;
+        //     go.transform.position = pos;
+        //     Image img = go.AddComponent<Image>();
+        //     img.sprite = Resources.Load<Sprite>("yellow");
+        //     float size = xAntSize * 1.5f;
+        //     img.rectTransform.sizeDelta = new Vector2(size, size);
+        //     img.GetComponent<Image>().color = colorTouchFound;
+        //     //
+        //     GameObject goUid = new GameObject(labelUid + "_uid");
+        //     goUid.transform.parent = go.transform;
+        //     goUid.transform.position = uidPos;
+        //     Text txtUid = goUid.AddComponent<Text>();
+        //     txtUid.text = labelUid;
+        //     txtUid.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        //     txtUid.color = colorTouchFound;
+        //     txtUid.fontSize = 25;
+        //     txtUid.fontStyle = FontStyle.Italic;
+        //     //txt.verticalOverflow = VerticalWrapMode.Overflow;
+        //     txtUid.horizontalOverflow = HorizontalWrapMode.Overflow;
 
-            // return touchMarker;
-
-            string labelUid = uid;
-            int uidY = (int)pos.y - 130;
-            Vector3 uidPos = new Vector3(pos.x, uidY, pos.z);
-            string labelName = uid;
-            int nameY = (int)pos.y - 160;
-            Vector3 namePos = new Vector3(pos.x, nameY, pos.z);
-
-            GameObject go = new GameObject(uid);
-            go.transform.parent = goCanvas.transform;
-            go.transform.position = pos;
-            Image img = go.AddComponent<Image>();
-            img.sprite = Resources.Load<Sprite>("yellow");
-            float size = xAntSize * 1.5f;
-            img.rectTransform.sizeDelta = new Vector2(size, size);
-            img.GetComponent<Image>().color = colorTouchFound;
-            //
-            GameObject goUid = new GameObject(labelUid + "_uid");
-            goUid.transform.parent = go.transform;
-            goUid.transform.position = uidPos;
-            Text txtUid = goUid.AddComponent<Text>();
-            txtUid.text = labelUid;
-            txtUid.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-            txtUid.color = colorTouchFound;
-            txtUid.fontSize = 25;
-            txtUid.fontStyle = FontStyle.Italic;
-            //txt.verticalOverflow = VerticalWrapMode.Overflow;
-            txtUid.horizontalOverflow = HorizontalWrapMode.Overflow;
-
-            return go;
-        }
+        //     return go;
+        // }
 
 
-        public GameObject CreateSpMarker(Vector3 pos, string charactername, string uid)
-        {
-            Debug.Log("CreateSpMarker Start: " + charactername);
-            string labelUid = uid;
-            int uidY = (int)pos.y - 130;
-            Vector3 uidPos = new Vector3(pos.x, uidY, pos.z);
-            string labelName = charactername;
-            int nameY = (int)pos.y - 160;
-            Vector3 namePos = new Vector3(pos.x, nameY, pos.z);
+        // public GameObject CreateSpMarker(Vector3 pos, string charactername, string uid)
+        // {
+        //     Debug.Log("CreateSpMarker Start: " + charactername);
+        //     string labelUid = uid;
+        //     int uidY = (int)pos.y - 130;
+        //     Vector3 uidPos = new Vector3(pos.x, uidY, pos.z);
+        //     string labelName = charactername;
+        //     int nameY = (int)pos.y - 160;
+        //     Vector3 namePos = new Vector3(pos.x, nameY, pos.z);
 
-            GameObject go = new GameObject(labelName);
-            go.transform.parent = goCanvas.transform;
-            go.transform.position = pos;
+        //     GameObject go = new GameObject(labelName);
+        //     go.transform.parent = goCanvas.transform;
+        //     go.transform.position = pos;
 
 
-            // go.transform.scale = new Vector3(1,1,1);
-            // go.transform.rotation = Quaternion.identity;
+        //     // go.transform.scale = new Vector3(1,1,1);
+        //     // go.transform.rotation = Quaternion.identity;
 
-            Image img = go.AddComponent<Image>();
-            img.sprite = Resources.Load<Sprite>("yellow");
-            float size = xAntSize * 1.5f;
-            img.rectTransform.sizeDelta = new Vector2(size, size);
-            img.GetComponent<Image>().color = colorTouchFound;
-            //
-            GameObject goUid = new GameObject(labelUid + "_uid");
-            goUid.transform.parent = go.transform;
-            goUid.transform.position = uidPos;
-            Text txtUid = goUid.AddComponent<Text>();
-            txtUid.text = labelUid;
-            txtUid.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-            txtUid.color = colorTouchFound;
-            txtUid.fontSize = 25;
-            txtUid.fontStyle = FontStyle.Italic;
-            //txt.verticalOverflow = VerticalWrapMode.Overflow;
-            txtUid.horizontalOverflow = HorizontalWrapMode.Overflow;
-            //
-            GameObject goName = new GameObject(labelName + "_name");
-            goName.transform.parent = go.transform;
-            goName.transform.position = namePos;
-            Text txtName = goName.AddComponent<Text>();
-            txtName.text = labelName;
-            txtName.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-            txtName.color = colorTouchFound;
-            txtName.fontSize = 30;
-            txtName.fontStyle = FontStyle.Bold;
-            //txt.verticalOverflow = VerticalWrapMode.Overflow;
-            txtName.horizontalOverflow = HorizontalWrapMode.Overflow;
-            //
-            Debug.Log("CreateSpMarker End: " + charactername);
-            return go;
-        }
+        //     Image img = go.AddComponent<Image>();
+        //     img.sprite = Resources.Load<Sprite>("yellow");
+        //     float size = xAntSize * 1.5f;
+        //     img.rectTransform.sizeDelta = new Vector2(size, size);
+        //     img.GetComponent<Image>().color = colorTouchFound;
+        //     //
+        //     GameObject goUid = new GameObject(labelUid + "_uid");
+        //     goUid.transform.parent = go.transform;
+        //     goUid.transform.position = uidPos;
+        //     Text txtUid = goUid.AddComponent<Text>();
+        //     txtUid.text = labelUid;
+        //     txtUid.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        //     txtUid.color = colorTouchFound;
+        //     txtUid.fontSize = 25;
+        //     txtUid.fontStyle = FontStyle.Italic;
+        //     //txt.verticalOverflow = VerticalWrapMode.Overflow;
+        //     txtUid.horizontalOverflow = HorizontalWrapMode.Overflow;
+        //     //
+        //     GameObject goName = new GameObject(labelName + "_name");
+        //     goName.transform.parent = go.transform;
+        //     goName.transform.position = namePos;
+        //     Text txtName = goName.AddComponent<Text>();
+        //     txtName.text = labelName;
+        //     txtName.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        //     txtName.color = colorTouchFound;
+        //     txtName.fontSize = 30;
+        //     txtName.fontStyle = FontStyle.Bold;
+        //     //txt.verticalOverflow = VerticalWrapMode.Overflow;
+        //     txtName.horizontalOverflow = HorizontalWrapMode.Overflow;
+        //     //
+        //     Debug.Log("CreateSpMarker End: " + charactername);
+        //     return go;
+        // }
 
         IEnumerator GetData(string uid)
         {

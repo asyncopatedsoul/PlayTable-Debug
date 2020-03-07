@@ -41,7 +41,8 @@ namespace PlayTable {
                     proxySmartTouchMarker = SmartPiece.instance.CreateTouchMarker2D(mouse, proxyFingerID, proxyCharacterName, proxyUID); 
                 } else 
                 {
-                    proxySmartTouchMarker.go.transform.position = mousePos;
+                    // proxySmartTouchMarker.go.transform.position = mousePos;
+                    SmartPiece.instance.UpdateTouchMarker(proxyFingerID, mousePos);
                 }
                 
             }
@@ -50,17 +51,9 @@ namespace PlayTable {
                 if (proxySmartTouchMarker!=null)
                 {
                     Debug.Log("Destroy proxy TouchMarker.");
-                    SmartPiece.instance.ClearAllTouchMarkers();
+                    SmartPiece.instance.ClearTouchMarker(proxyFingerID);
                     proxySmartTouchMarker = null;
                 }
-            }
-
-            
-            Ray castPoint = Camera.main.ScreenPointToRay(mouse);
-            RaycastHit hit;
-            if (Physics.Raycast(castPoint, out hit, Mathf.Infinity, hitLayers))
-            {
-                moveThis.transform.position = hit.point;
             }
         }
     }
