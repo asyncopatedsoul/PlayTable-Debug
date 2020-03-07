@@ -12,11 +12,20 @@ namespace PlayTable {
 
     public class SmartPiece : MonoBehaviour
     {
+        public static SmartPiece instance = null;
+
+        protected void Awake()
+        {
+            if (instance == null)
+                instance = this;
+        }
+
         public PTService ptsrv;
 
         public bool deviceOffline = false; 
         public String smartTouchCanvasName = "SmartTouchCanvas";
         public GameObject touchMarkerPrefab;
+        public GameObject touchMarker2DPrefab;
 
         // TouchMap
         int xOffsetL = 64;
@@ -57,7 +66,7 @@ namespace PlayTable {
 
         int cntSp = 0;
 
-        List<SpMarker> spMarkers;
+        public List<SpMarker> spMarkers;
 
         public class SpMarker
         {
@@ -158,12 +167,12 @@ namespace PlayTable {
                                 // yield return StartCoroutine(GetCharacterNameFromUID(uid));
                                 // string characterName = jsonName;
                                 // Debug.Log("Sp charactername: " + characterName);
-                                string characterName = String.Format("UID {0} at {1},{2}",uid,xCoordinate,yCoordinate);
+                                string characterName = String.Format("UID {0} at {1},{2} : {3}", uid, xCoordinate, yCoordinate, t.fingerId);
                                 
                                 spMarkers.Add(new SpMarker(t.fingerId, CreateSpMarker(touchPos, characterName, uid)));
                             
                         } else {
-                                spMarkers.Add(new SpMarker(t.fingerId, CreateTouchMarker(touchPos, String.Format("NO UID at {0},{1}",xCoordinate,yCoordinate))));
+                                spMarkers.Add(new SpMarker(t.fingerId, CreateTouchMarker(touchPos, String.Format("NO UID at {0},{1} : {2}",xCoordinate, yCoordinate, t.fingerId))));
                         }
                     }
                 } else if (t.phase == TouchPhase.Ended) {
@@ -190,7 +199,21 @@ namespace PlayTable {
             spMarkers.Clear();
         }
 
-        GameObject CreateTouchMarker(Vector3 pos, string uid) 
+        public SpMarker CreateTouchMarker2D(Vector3 spawnPosisiton, int touchID, string label, string uid)
+        {
+            GameObject touchMarker2D = Instantiate(touchMarker2DPrefab, spawnPosisiton, Quaternion.identity);
+            // touchMarker.GetComponentInChildren<TouchMarker>().smartPieceID = uid;
+
+            touchMarker2D.transform.parent = goCanvas.transform;
+            touchMarker2D.transform.position = spawnPosisiton;
+
+            SpMarker marker = new SpMarker(touchID, touchMarker2D);
+            spMarkers.Add(marker);
+
+            return marker;
+        }
+
+        public GameObject CreateTouchMarker(Vector3 pos, string uid) 
         {
             // GameObject touchMarker = Instantiate(touchMarkerPrefab, pos, Quaternion.identity);
             // touchMarker.GetComponentInChildren<TouchMarker>().smartPieceID = uid;
@@ -232,7 +255,7 @@ namespace PlayTable {
         }
 
 
-        GameObject CreateSpMarker(Vector3 pos, string charactername, string uid)
+        public GameObject CreateSpMarker(Vector3 pos, string charactername, string uid)
         {
             Debug.Log("CreateSpMarker Start: " + charactername);
             string labelUid = uid;
@@ -245,6 +268,11 @@ namespace PlayTable {
             GameObject go = new GameObject(labelName);
             go.transform.parent = goCanvas.transform;
             go.transform.position = pos;
+
+
+            // go.transform.scale = new Vector3(1,1,1);
+            // go.transform.rotation = Quaternion.identity;
+
             Image img = go.AddComponent<Image>();
             img.sprite = Resources.Load<Sprite>("yellow");
             float size = xAntSize * 1.5f;
